@@ -16,10 +16,6 @@ public class Main
     private static boolean Flag;
     public static void main(String[] args)
     {
-        double[] nums={1.0,2.0,3.0,4,5};
-        double n = java.util.Arrays.binarySearch(nums,3.5);
-        System.out.println(n);
-        /*
         main:
         while (true)
         {
@@ -55,7 +51,6 @@ public class Main
                 default:
                     break;
             }
-        }*/
-
+        }
     }
 }
