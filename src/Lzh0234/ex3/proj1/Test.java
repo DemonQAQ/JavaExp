@@ -13,7 +13,7 @@ public class Test
         Randomf random =new Randomf();
         String[] courseTitle = new String[]{"大学英语","概率论与数理统计","数据库系统原理","面向对象程序设计"};
         String[] name=new String[]{"梁梓浩","曾鸭鸭","曾小号","积积斌","坚毅猪"};
-        GHStudent[] students=new GHStudent[4];
+        GHStudent[] students=new GHStudent[5];
         for (int i=0;i<students.length;i++)
         {
             students[i]=new GHStudent();
