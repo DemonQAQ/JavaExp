@@ -10,10 +10,10 @@ public class Main
 {
     public static void main(String[] args)
     {
-        int[][] square=new int[][]{{5,1,9},{9,5,0},{0,5,9}};
+        int[][] square=new int[][]{{1,0,0},{0,5,0},{0,0,0}};
         long startMili=System.nanoTime();
         ThreeStageMagicSquare.lock(square);
-        ThreeStageMagicSquare.twicePoint_(square,2,0);
+        ThreeStageMagicSquare.thricePoint(square,0,0,false);
         //ThreeStageMagicSquare.create(square,0,1);//1760400
         //ThreeStageMagicSquare.lock(square);
         //ThreeStageMagicSquare.twicePoint(square,0,1);

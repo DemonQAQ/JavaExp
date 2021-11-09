@@ -1,6 +1,6 @@
 package Lzh0234.ex4;
 
-import org.jetbrains.annotations.NotNull;
+
 
 import java.util.List;
 import java.util.Random;
@@ -109,7 +109,7 @@ public class ThreeStageMagicSquare
         } else return 0;
     }
 
-    public static boolean twicePoint(int[][] square, int i_, int j_)
+    public static boolean twicePoint_(int[][] square, int i_, int j_)
     {
         int times = 0, i = i_, j = j_;
         cache[1][1][0] = true;
@@ -265,7 +265,7 @@ public class ThreeStageMagicSquare
         }
         return true;
     }
-    public static boolean twicePoint_(int[][] square, int i_, int j_)
+    public static boolean twicePoint(int[][] square, int i_, int j_)
     {
         int temp,i,j;
         //初始点未有值
@@ -477,7 +477,7 @@ public class ThreeStageMagicSquare
         }
     }
 
-    public static Boolean thricePoint(int[][] square, int i_, int j_, boolean backStateOn)
+    public static Boolean thricePoint_(int[][] square, int i_, int j_, boolean backStateOn)
     {
         boolean flag = twicePoint(square, i_, j_);
         if (squareIsFull(square))
@@ -524,9 +524,74 @@ public class ThreeStageMagicSquare
         return true;
     }
 
-    public static Boolean thricePoint_(int[][] square, int i_, int j_, boolean backStateOn)
+    public static Boolean thricePoint(int[][] square, int i_, int j_, boolean backStateOn)
     {
-        return false;
+        boolean flag = twicePoint(square,i_,j_);
+        if (!flag)return false;
+        else
+        {
+            int temp;
+            if (backStateOn)
+            {
+                //两点都锁了
+                if (cache[(i_+1)%3][(j_+2)%3][0]&cache[(i_+2)%3][(j_+4)%3][0])
+                {
+                    if (!addBackDiagonal(square,i_,j_))return true;
+                    else return false;
+                }
+                temp = square[1][1];
+                if (cache[2][0][0])
+                {
+                    if (15-temp-square[i_][j_]<=9&15-temp-square[i_][j_]>0)
+                    {
+                        square[0][2]=15-temp-square[i_][j_];
+                        cache[0][2][0]=true;
+                        return true;
+                    }
+                    else return false;
+                }
+                else
+                {
+                    if (15-temp-square[i_][j_]<=9&15-temp-square[i_][j_]>0)
+                    {
+                        square[2][0]=15-temp-square[i_][j_];
+                        cache[2][0][0]=true;
+                        return true;
+                    }
+                    else return false;
+                }
+            }
+            else
+            {
+                //行两点锁吗
+                if (cache[(i_+1)%3][(j_+1)%3][0]&cache[(i_+2)%3][(j_+2)%3][0])
+                {
+                    if (!addDiagonal(square,i_,j_))return true;
+                    else return false;
+                }
+                temp = square[1][1];
+                if (cache[2][2][0])
+                {
+                    if (15-temp-square[i_][j_]<=9&15-temp-square[i_][j_]>0)
+                    {
+                        square[0][0]=15-temp-square[i_][j_];
+                        cache[0][0][0]=true;
+                        return true;
+                    }
+                    else return false;
+                }
+                else
+                {
+                    if (15-temp-square[i_][j_]<=9&15-temp-square[i_][j_]>0)
+                    {
+                        square[2][2]=15-temp-square[i_][j_];
+                        cache[2][2][0]=true;
+                        return true;
+                    }
+                    else return false;
+                }
+            }
+        }
     }
 
     public static boolean selectAddDiagonal(int[][] square,int i_,int j_,boolean backStateOn)
