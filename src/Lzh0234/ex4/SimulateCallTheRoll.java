@@ -15,7 +15,7 @@ public class SimulateCallTheRoll
         boolean[] flags = new boolean[students.length];
         Random random = new Random();
         int loc;
-        for (int i=5;i>0;i--)
+        for (int i=2;i>0;i--)
         {
             while (flags[loc=random.nextInt(students.length)]);
             flags[loc]=true;

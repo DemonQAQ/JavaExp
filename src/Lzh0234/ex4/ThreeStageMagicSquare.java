@@ -265,6 +265,217 @@ public class ThreeStageMagicSquare
         }
         return true;
     }
+    public static boolean twicePoint_(int[][] square, int i_, int j_)
+    {
+        int temp,i,j;
+        //初始点未有值
+        while (true)
+        {
+            if (square[i_][j_]==0)
+            {
+                //行另外两点是否被锁
+                if (cache[i_][(j_+1)%3][0]&&cache[i_][(j_+2)%3][0])
+                {
+                    //两锁时检查列是否被锁两点
+                    if (cache[(i_+1)%3][j_][0]&&cache[(i_+2)%3][j_][0])
+                    {
+                        if ((15-square[i_][(j_+1)%3]-square[i_][(j_+2)%3])==(15-square[(i_+1)%3][j_]-square[(i_+2)%3][j_]))
+                        {
+                            cache[i_][j_][0]=true;
+                            square[i_][j_]=15-square[i_][(j_+1)%3]-square[i_][(j_+2)%3];
+                        }
+                        else return false;
+                    }
+                    else
+                    {
+                        cache[i_][j_][0]=true;
+                        square[i_][j_]=15-square[i_][(j_+1)%3]-square[i_][(j_+2)%3];
+                    }
+                }
+                else
+                {
+                    //行两点都没锁，直接生成
+                    if (!cache[i_][(j_+1)%3][0]&!cache[i_][(j_+2)%3][0])square[i_][j_]=
+                            getRandomNum(i_,j_);
+                        //行锁了一点，根据锁的点确定生成的可行范围
+                    else
+                    {
+
+                        if (cache[i_][(j_+1)%3][0])temp = square[i_][(j_+1)%3];
+                        else temp = square[i_][(j_+2)%3];
+                        cache[i_][j_][0]=true;
+                        do
+                        {
+                            if (checkPointCacheFull(i_,j_))return false;
+                            square[i_][j_]=getRandomNum(i_,j_);
+                        }while (15-temp-square[i_][j_]>9);
+                    }
+                }
+            }
+            //初始点有值
+            else
+            {
+                boolean colModel=false;
+                boolean tempLock=false;
+                while (true)
+                {
+                    //列模式
+                    if (colModel)
+                    {
+                        //整列都被封锁，此时行应是满的
+                        if (cache[i_][j_][0]&&cache[(i_+1)%3][j_][0]&&cache[(i_+2)%3][j_][0])
+                        {
+                            if (!addRow(square,i_,j_)&!addCol(square, i_, j_))return true;
+                            else return false;
+                        }
+
+                    }
+                    //行模式
+                    else
+                    {
+                        //整行都被封锁
+                        if (cache[i_][j_][0]&&cache[i_][(j_+1)%3][0]&&cache[i_][(j_+2)%3][0])
+                        {
+                            //addRow检测一行为15时返回false
+                            if (!addRow(square,i_,j_))
+                            {
+                                colModel=true;
+                                continue;
+                            }
+                            else return false;
+                        }
+                    }
+                    //行或列未被完全封锁时到此处
+                    //确定是两个点都没锁还是只锁了一个点
+                    //当前为列模式
+                    if (colModel)
+                    {
+                        //给定点周围两个都没被封锁
+                        if (!cache[(i_+1)%3][j_][0]&!cache[(i_+2)%3][j_][0])
+                        {
+                            i=(i_+1)%3;
+                            j=j_;
+                            cache[i][j][0]=true;
+                            tempLock=true;
+                            do
+                            {
+                                if(checkPointCacheFull(i,j))return false;
+                                square[i][j]=getRandomNum(i,j);
+                            }while (15-square[i_][j_]-square[i][j]>9);
+                        }
+                        //封锁了其中一个点
+                        else
+                        {
+                            //此时给定点和封锁点一共两个点被封锁
+                            if (cache[(i_+1)%3][j_][0])
+                            {
+                                i=(i_+2)%3;
+                                j=j_;
+                                temp=square[(i_+1)%3][j_];
+                            }
+                            else
+                            {
+                                i=(i_+1)%3;
+                                j=j_;
+                                temp=square[(i_+2)%3][j_];
+                            }
+                            //直接求解该点的值
+                            temp=15-temp-square[i_][j_];
+                            if (temp<=9&temp>0)
+                            {
+                                cache[i][j][0]=true;
+                                square[i][j]=temp;
+                                return true;
+                            }
+                            else
+                            {
+                                if (tempLock)
+                                {
+                                    if (cache[(i_+1)%3][j_][0])
+                                    {
+                                        cache[(i_+1)%3][j_][0]=false;
+                                        tempLock=false;
+                                        square[(i_+1)%3][j_]=0;
+                                    }
+                                    else
+                                    {
+                                        cache[(i_+2)%3][j_][0]=false;
+                                        tempLock=false;
+                                        square[(i_+2)%3][j_]=0;
+                                    }
+                                    continue;
+                                }
+                                else return false;
+                            }
+                        }
+
+                    }
+                    //行模式
+                    else
+                    {
+                        //给定点周围两个都没被封锁
+                        if (!cache[i_][(j_+1)%3][0]&!cache[i_][(j_+2)%3][0])
+                        {
+                            i=i_;
+                            j=(j_+1)%3;
+                            cache[i][j][0]=true;
+                            tempLock=true;
+                            do
+                            {
+                                if (checkPointCacheFull(i,j))return false;
+                                square[i][j]=getRandomNum(i,j);
+                            }while (15-square[i_][j_]-square[i][j]>9);
+                        }
+                        //封锁了其中一个点
+                        else
+                        {
+                            //此时给定点和封锁点一共两个点被封锁
+                            if (cache[i_][(j_+1)%3][0])
+                            {
+                                i=i_;
+                                j=(j_+2)%3;
+                                temp=square[i_][(j_+1)%3];
+                            }
+                            else
+                            {
+                                i=i_;
+                                j=(j_+1)%3;
+                                temp=square[i_][(j_+2)%3];
+                            }
+                            //直接求解该点的值
+                            temp=15-temp-square[i_][j_];
+                            if (temp<=9&temp>0)
+                            {
+                                cache[i][j][0]=true;
+                                square[i][j]=temp;
+                                colModel=true;
+                            }
+                            else
+                            {
+                                if (tempLock)
+                                {
+                                    if (cache[i_][(j_+1)%3][0])
+                                    {
+                                        cache[i_][(j_+1)%3][0]=false;
+                                        tempLock=false;
+                                        square[i_][(j_+1)%3]=0;
+                                    }
+                                    else
+                                    {
+                                        cache[i_][(j_+2)%3][0]=false;
+                                        tempLock=false;
+                                        square[i_][(j_+2)%3]=0;
+                                    }
+                                    continue;
+                                }
+                                else return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public static Boolean thricePoint(int[][] square, int i_, int j_, boolean backStateOn)
     {
@@ -311,6 +522,11 @@ public class ThreeStageMagicSquare
         }
 
         return true;
+    }
+
+    public static Boolean thricePoint_(int[][] square, int i_, int j_, boolean backStateOn)
+    {
+        return false;
     }
 
     public static boolean selectAddDiagonal(int[][] square,int i_,int j_,boolean backStateOn)
