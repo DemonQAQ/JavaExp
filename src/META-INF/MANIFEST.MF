@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: Lzh0234.ex5.prjo1.Test
+Class-Path: annotations-20.1.0.jar
+

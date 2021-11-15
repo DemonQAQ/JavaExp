@@ -13,10 +13,56 @@ import java.util.Scanner;
  */
 public class ThreeStageSquare
 {
-    //0号位作锁变量
+    //缓存的0号位作锁变量
     private static final boolean[][][] cache = new boolean[3][3][10];
     private static final Random random = new Random();
     private static final Scanner scanner = new Scanner(System.in);
+
+    public static void input()
+    {
+        int[][] square = new int[][]{{0,0,0},{0,0,0},{0,0,0}};
+        int i,j;
+        boolean flag = false;
+        System.out.println("请输入坐标(i,j),i代表行，取值范围[0,2]、j代表列，取值范围[0,2]");
+        do
+        {
+            i=scanner.nextInt();
+            j=scanner.nextInt();
+            if (i>2||i<0||j>2||j<0)
+            {
+                System.out.println("输入的数据范围有误，请检查后重新输入");
+                flag = true;
+            }
+            else flag =false;
+        }while (flag);
+        System.out.println("当前坐标("+i+","+j+"),请输入该点的值，取值范围[1,9]");
+        do
+        {
+            square[i][j]=scanner.nextInt();
+            if (square[i][j]>9||square[i][j]<0)
+            {
+                System.out.println("输入的数据范围有误，请检查后重新输入");
+                flag = true;
+            }
+            else flag =false;
+        }while (flag);
+        if (i==1&&j==1)
+        {
+            if (square[i][j]!=5)System.out.println("生成失败");
+        }
+        else square[i][j]=5;
+        execute(square,i,j);
+        {
+            for (int x=0;x<3;x++)
+            {
+                for (int y=0;y<3;y++)
+                {
+                    System.out.print(square[x][y]+"  ");
+                }
+                System.out.println();
+            }
+        }
+    }
 
     public static void execute(int[][] square, int i_, int j_)
     {
