@@ -1,7 +1,5 @@
 package Lzh0234.ex5.prjo3;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 import java.util.function.Consumer;
@@ -99,7 +97,7 @@ public class Events
     }
 
     //死掉了
-    private static <T extends Human> Human Dead(@NotNull T people)
+    private static <T extends Human> Human Dead( T people)
     {
         people.setLive(false);
         System.out.println("你死了");
@@ -107,7 +105,7 @@ public class Events
     }
 
     //设置职业
-    public static <T extends Human> Human gainCareer(@NotNull T people)
+    public static <T extends Human> Human gainCareer( T people)
     {
         int index;
         if (people.getClass() == CowHouse.class) index = random.nextInt(5) + 1;
@@ -118,7 +116,7 @@ public class Events
     }
 
     //设置副业
-    public static <T extends Human> Human gainAvocation(@NotNull T people)
+    public static <T extends Human> Human gainAvocation( T people)
     {
         int index;
         if (people.getClass() == CowHouse.class) index = random.nextInt(5) + 1;
@@ -129,7 +127,7 @@ public class Events
     }
 
     //增加财富
-    public static <T extends Human> Human addValue(@NotNull T people)
+    public static <T extends Human> Human addValue( T people)
     {
         if (people.getCareer().equals("无业") || people.getAvocation().equals("无业"))
         {
@@ -283,7 +281,7 @@ public class Events
         return people;
     }
 
-    public static <T extends Human> Human transfer(@NotNull T people)
+    public static <T extends Human> Human transfer( T people)
     {
         Human human;
         if (people.getClass() == CowHouse.class)
@@ -292,23 +290,20 @@ public class Events
             human = new Childe(people.getName());
             human.setValue(people.getValue());
             human.setLucky(people.getLucky() + 5);
-            human.setAge(people.getAge());
-            Events.gainCareer(human);
-            Events.gainAvocation(human);
         } else
         {
             System.out.println("你变成了牛马");
             human = new CowHouse(people.getName());
             human.setValue(100000);
             human.setLucky((people.getLucky() - 5) > 0 ? people.getLucky() - 5 : 5);
-            human.setAge(people.getAge());
-            Events.gainCareer(human);
-            Events.gainAvocation(human);
         }
+        human.setAge(people.getAge());
+        Events.gainCareer(human);
+        Events.gainAvocation(human);
         return human;
     }
 
-    public static <T extends Human> Human beFiredOnCareer(@NotNull T people)
+    public static <T extends Human> Human beFiredOnCareer( T people)
     {
         if (people.getCareer().equals("无业"));
         else
@@ -319,7 +314,7 @@ public class Events
         return people;
     }
 
-    public static <T extends Human> Human beFiredOnAvocation(@NotNull T people)
+    public static <T extends Human> Human beFiredOnAvocation( T people)
     {
         if (people.getAvocation().equals("无业"));
         else
@@ -330,7 +325,7 @@ public class Events
         return people;
     }
 
-    public static <T extends Human> Human fallILl(@NotNull T people)
+    public static <T extends Human> Human fallILl( T people)
     {
         int cost = random.nextInt((1000000));
         System.out.println("你生病了");
@@ -376,7 +371,8 @@ public class Events
         }
         if (price == 4)
         {
-            System.out.println("你玩的游戏[原魔]一发十连抽到了9个五星");
+            people.setLucky(people.getLucky()+5);
+            System.out.println("你过马路扶老奶奶，幸运值+5");
         }
         if (price == 5)
         {
@@ -395,8 +391,8 @@ public class Events
         int price = random.nextInt(6) + 1;
         if (price == 1)
         {
-            people.setValue(people.getValue() - 1000);
-            System.out.println("你走路踩屎，摔了一跤摔坏了手机，维修手机花了1000元");
+            people.setLucky(Math.max((people.getLucky() - 5), 0));
+            System.out.println("你走路踩屎，摔了一跤摔坏了手机，幸运值-5");
         }
         if (price == 2)
         {
@@ -415,7 +411,8 @@ public class Events
         }
         if (price == 5)
         {
-            System.out.println("你摔了一跤");
+            people.setMaxAge(people.getMaxAge()-20);
+            System.out.println("你玩的游戏[原魔]一次十连抽到了9个五星，献祭了你20年阳寿");
         }
         if (price == 6)
         {

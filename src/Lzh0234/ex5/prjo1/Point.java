@@ -14,7 +14,7 @@ public class Point
     private double x;
     private double y;
 
-    Point(String name,double x,double y)
+    Point(String name, double x, double y)
     {
         this.name=name;
         this.x=x;
