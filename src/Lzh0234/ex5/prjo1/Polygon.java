@@ -30,6 +30,44 @@ public class Polygon
         this.points.add(point);
     }
 
+    public void start()
+    {
+        gainPoints(this.tree);
+        dividePoints();
+        System.out.println(sumTotal());
+    }
+
+    public void gainPoints(PointTree tree)
+    {
+
+        if (tree.getLength()==0)
+        {
+            inputPoints(tree);
+            System.out.println("是否有岛洞?t/f");
+            if (SCANNER.next().equals("t"))
+            {
+                tree.createChild();
+                gainPoints(tree.next);
+            }
+        }
+        else
+        {
+            System.out.println("当前层数"+(tree.getLength()+1)+",请输入岛洞数量");
+            int length = SCANNER.nextInt();
+            for (int i=0;i<length;i++)
+            {
+                System.out.println("正在输入第"+i+"个岛洞");
+                inputPoints(tree);
+                System.out.println("当前岛洞内是否有岛洞？t/f");
+                if (SCANNER.next().equals("t"))
+                {
+                    tree.createChild();
+                    gainPoints(tree.next);
+                }
+            }
+        }
+    }
+
     private boolean havePoint(String name)
     {
         Point[] points = this.points.toArray(new Point[this.points.size()]);
@@ -43,35 +81,36 @@ public class Polygon
     private Point findPoint(String name)
     {
         Point[] points = this.points.toArray(new Point[this.points.size()]);
-        for (int i=0;i< points.length;i++)
+        for (int i = 0; i < points.length; i++)
         {
-            if (points[i].getName().equals(name))return points[i];
+            if (points[i].getName().equals(name)) return points[i];
         }
         return null;
     }
 
-    public void inputPoints()
+    private void inputPoints(PointTree tree)
     {
-        PointTree root = tree;
-        int length = 0;
         String name;
         double x;
         double y;
-        System.out.println("请输入多边形的坐标，如有岛洞则从最外层坐标按层输入");
-        System.out.println("当前层数:第" + length+1 + "层");
-        while (root.getLength()!=length)root=root.next;
+        ArrayList<String> pointSet = new ArrayList<>();
+        System.out.println("当前层数:第" + (tree.getLength()+1)+ "层");
+        System.out.println("请按顺时针输入全部顶点");
         while (true)
         {
+            System.out.println("请输入点名称(唯一)");
             name = SCANNER.next();
             if (name.equals("end")) break;
+            System.out.println("请输入坐标x");
             x = SCANNER.nextDouble();
+            System.out.println("请输入坐标y");
             y = SCANNER.nextDouble();
             if (havePoint(name))
             {
                 Point temp = findPoint(name);
-                if (temp.getX()!=x||temp.getY()!=y)
+                if (temp.getX() != x || temp.getY() != y)
                 {
-                    System.out.println("已存在点"+name+"," +
+                    System.out.println("已存在点" + name + "," +
                             "请为每个坐标赋予唯一标识符");
                     continue;
                 }
@@ -79,13 +118,34 @@ public class Polygon
             {
 
                 Point point = new Point(name, x, y);
-                points.add(point);
+                this.points.add(point);
             }
-            root.points.add(name);
+            pointSet.add(name);
+            System.out.println("继续输入点，如输入完毕输入“end”结束");
+        }
+        tree.points.add(pointSet.toArray(new String[0]));
+
+    }
+
+    private void dividePoints()
+    {
+        divide(tree.points.toArray(new String[0][0])[0],0);
+        if (tree.next!=null)
+        {
+            PointTree root = tree.next;
+            while (root!=null)
+            {
+                String[][] strings = root.points.toArray(new String[0][0]);
+                for (int i=0;i<strings.length;i++)
+                {
+                    divide(strings[i],root.getLength());
+                }
+                root=root.next;
+            }
         }
     }
 
-    public void dividePoints(String[] points, int length)
+    private void divide(String[] points, int length)
     {
         for (int i = 0; i < points.length - 1; i++)
         {
@@ -108,13 +168,13 @@ public class Polygon
                             else index = j + 1;
                         } else index++;
                     }
-                    dividePoints(points1, length + 1);
+                    divide(points1, length + 1);
                     //中间
                     for (int i1 = i + 1; i <= j; i1++)
                     {
                         points2[i1] = points[i1];
                     }
-                    dividePoints(points2, length + 1);
+                    divide(points2, length + 1);
                 }
             }
         }
@@ -122,7 +182,7 @@ public class Polygon
 
     }
 
-    public void writeToTree(String[] points, int length)
+    private void writeToTree(String[] points, int length)
     {
         Point[] temp = this.points.toArray(new Point[this.points.size()]);
         Point[] divide = new Point[points.length];
@@ -141,8 +201,27 @@ public class Polygon
         root.pointsDivided.add(divide);
     }
 
+    private double sumTotal()
+    {
+        double s=0,temp =0;
+        PointTree root=tree;
+        while (root!=null)
+        {
+            temp = 0;
+            Point[][] points=root.pointsDivided.toArray(new Point[0][0]);
+            for (int i=0;i<points.length;i++)
+            {
+                temp+=Shoelace(points[i]);
+            }
+            if (root.getLength()%2==1)s+=(-1*temp);
+            else s+=temp;
+            root=root.next;
+        }
+        return s;
+    }
+
     //需要有序的点集
-    public double Shoelace(Point[] points)
+    private double Shoelace(Point[] points)
     {
         double s = 0;
         int j;

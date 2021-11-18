@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class PointTree
 {
-    int length = 0;
-    ArrayList<String> points;
+    private int length = 0;
+    ArrayList<String[]> points;
     ArrayList<Point[]> pointsDivided;
     PointTree next;
 
@@ -32,12 +32,12 @@ public class PointTree
         return length;
     }
 
-    public ArrayList<String> getPoints()
+    public ArrayList<String[]> getPoints()
     {
         return points;
     }
 
-    public void setPoints(String points)
+    public void setPoints(String[] points)
     {
         this.points.add(points);
     }
