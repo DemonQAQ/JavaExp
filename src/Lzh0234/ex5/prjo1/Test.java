@@ -10,8 +10,11 @@ public class Test
 {
     public static void main(String[] args) throws Exception
     {
-        Point[] points=new Point[]{new Point("A",-1,1),new Point("A",0,0),new Point("B",2,0),
-                new Point("F",3,1), new Point("C",2,2),new Point("E",1,3), new Point("D",0,2)};
-        System.out.println(new Polygon().Shoelace(points));
+        //System.out.println(new Circle(5).area());
+        //System.out.println(new Rectangle(4,5).area());
+        //System.out.println(new Triangle(3,4,5).area());
+        //System.out.println(new Trapezoid(3,5,4).area());
+        Polygon polygon=new Polygon();
+        polygon.start();
     }
 }

@@ -24,6 +24,6 @@ public class Trapezoid extends Shape
     @Override
     public double area()
     {
-        return ((getSide()[0]+getSide()[1])*getSide()[3])/2.0;
+        return ((getSide()[0]+getSide()[1])*getSide()[2])/2.0;
     }
 }
